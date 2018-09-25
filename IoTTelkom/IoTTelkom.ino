@@ -171,6 +171,8 @@ void detectMagnet(){
   Serial.println("Magnet Detected");
 }
 
+// 
+
 // just testing
 String readHallEffect(){
   int val = digitalRead(pinHall);
