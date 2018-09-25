@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Graph - Weather Station</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/chart.css">
+    <link rel="sytlesheet" type="text/css" href="plugins/DataTables/css/jquery.dataTables.min.css">
+    <link rel="sytlesheet" type="text/css" href="plugins/DataTables/css/dataTables.bootstrap.css">
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">Dashboard</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="index.html">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h2> Monthly Graph </h2>
+        <br>
+        <div class="row">
+            <div id="tempGraph" class="col-md-6" style="min-width: 310px; height: 400px; margin: 0 auto; ">
+            </div>
+            <div id="humidGraph" class="col-md-6" style="min-width: 310px; height: 400px; margin: 0 auto; ">
+            </div>
+        </div>
+        <div class="row">
+            <div id="windSpeedGraph" class="col-md-6" style="min-width: 310px; height: 400px; margin: 0 auto">
+            </div>
+            <div id="windDirectionGraph" class="col-md-6" style="min-width: 310px; height: 400px; margin: 0 auto">
+            </div>
+        </div>
+        <div class="row">
+            <div id="luxIntensityGraph" class="col-md-6" style="min-width: 310px; height: 400px; margin: 0 auto">
+            </div>
+        </div>
+        <br>
+        <h2> Data Table ZeroDevice-1 </h2>
+        <hr>
+        <table id="example" class="display table-hover" width="100%">
+            <thead>
+                <tr>
+                    <th>No </th>
+                    <th>Temperature (celcius) </th>
+                    <th>Humidity (percent)</th>
+                    <th>Wind Speed (m/s)</th>
+                    <th>Wind Direction (degree)</th>
+                    <th>Light Intensity (lux)</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>No </th>
+                    <th>Temperature (celcius) </th>
+                    <th>Humidity (percent)</th>
+                    <th>Wind Speed (m/s)</th>
+                    <th>Wind Direction (degree)</th>
+                    <th>Light Intensity (lux)</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</body>
+<script src="js/jquery-3.3.1.min.js"></script>
+<!-- Import socket io -->
+<script src="js/bootstrap.js"></script>
+<!-- Import socket io -->
+<script src="/socket.io/socket.io.js"></script>
+<!-- Import socket io -->
+<!-- highcharts -->
+<script type="text/javascript" src="js/highcharts.js"></script>
+<!-- gauge -->
+<script type="text/javascript" src="js/gauge.min.js"></script>
+<!--<script src="app/data.js"></script>-->
+<!-- import data js -->
+<script type="text/javascript" src="plugins/DataTables/js/jquery.dataTables.min.js"></script>
+<script src="app/monthlyGraph.js"></script>
+<!-- import data js -->
+
+</html>
+<!-- DAta Tables -->
