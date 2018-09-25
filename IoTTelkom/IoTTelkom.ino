@@ -1,3 +1,10 @@
+/**
+Bismillahirahmanirahim
+
+To Do :
+A411 Hall Effect Config
+**/
+
 #include <SPI.h>
 #include <LoRa.h>
 #include <stdint.h>
@@ -34,6 +41,10 @@ BH1750 lightMeterBH1750(0x23);
 */
 static const int RXPin = 3, TXPin = 4;
 static const uint32_t GPSBaud = 9600;
+
+// Hall effect
+#define pinHall 5 // Digital 
+
 
 // The TinyGPS++ object
 TinyGPSPlus gps;
@@ -134,6 +145,17 @@ void setupBH1750(){
 void setupGPS(){
   Serial.println("GPS setup start..");
   ss.begin(GPSBaud);
+}
+
+void setupHallEffect(){
+  Serial.println("Hall Effect setup...");
+  pinMode(pinHall, INPUT);
+}
+
+String readHallEffect(){
+  int val = digitalRead(pinHall);
+
+  return String(val);
 }
 
 String readGPS(){ 
@@ -262,6 +284,9 @@ void setup() {
 
   // gps
   setupGPS();
+
+  // hall effect
+  setupHallEffect();
 }
 
 void sendingDataLoRa(String data){
@@ -289,6 +314,10 @@ void loop() {
   String location = readGPS();
   Serial.println("GPS Read : "  + location);
 
+  // hall effect
+  String detect = readHallEffect();
+  Serial.println("Hall Effect : " + detect);
+
   sendingDataLoRa(dataBME + "," + lux + "," + windDirection + "," + location);
   //delay(100);
 
@@ -309,15 +338,3 @@ static void smartDelay(unsigned long ms)
       gps.encode(ss.read());
   } while (millis() - start < ms);
 }
-
-
-
-
-
-
-
-
-
-
-
-
