@@ -39,11 +39,22 @@ BH1750 lightMeterBH1750(0x23);
    It requires the use of SoftwareSerial, and assumes that you have a
    4800-baud serial GPS device hooked up on pins 4(rx) and 3(tx).
 */
-static const int RXPin = 3, TXPin = 4;
+static const int RXPin = 5, TXPin = 4; // yellow cable RX, TX green cable.
 static const uint32_t GPSBaud = 9600;
 
 // Hall effect
-#define pinHall 5 // Digital 
+#define pinHall 2 // Digital 
+
+//Wind gust and rainfall arrays are updated every minute
+//Timing variables
+byte seconds;                       //Keeps track of seconds to increment the minute counter
+byte mins_2;                        //Keeps track of time for average wind dir/speed over two minutes
+byte minutes;                       //Keeps track of minutes to enable easy access to time-based array locations
+byte mins_10;                       //Keeps track of time for average wind dir/speed over ten minutes
+long prevSec;                       //Millis counter to check for passing seconds
+unsigned int timeSinceReset;        //Keeps track of time (in mins) since last reset and resets variables after 24hrs
+int wind_speed_rpm;
+int rain_fall_minute;
 
 
 // The TinyGPS++ object
@@ -149,13 +160,36 @@ void setupGPS(){
 
 void setupHallEffect(){
   Serial.println("Hall Effect setup...");
-  pinMode(pinHall, INPUT);
+  //interrupt all gpio beside gpio16
+  pinMode(pinHall, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(pinHall),detectMagnet,CHANGE);
 }
 
+void detectMagnet(){
+  //digitalWrite(LED2, HIGH);
+  count++;
+  Serial.println("Magnet Detected");
+}
+
+// just testing
 String readHallEffect(){
   int val = digitalRead(pinHall);
 
   return String(val);
+}
+
+// count tipping 
+int countTipping = 0, rainFall = 0;
+String countRainFall(){
+  rainFall = rainFall + (0.2 * count);
+
+  return String(rainFall);
+}
+
+void resetRainValue(){
+  rainFall = 0;
+  rain_fall_minute = 0;
+  countTipping = 0;
 }
 
 String readGPS(){ 
@@ -315,11 +349,23 @@ void loop() {
   Serial.println("GPS Read : "  + location);
 
   // hall effect
-  String detect = readHallEffect();
-  Serial.println("Hall Effect : " + detect);
+   String detect = readHallEffect();
+   Serial.println("Hall Effect : " + detect);
 
-  sendingDataLoRa(dataBME + "," + lux + "," + windDirection + "," + location);
+  sendingDataLoRa(dataBME + "," + lux + "," + windDirection + "," + location + "," + detect);
   //delay(100);
+
+  if(millis()-prevSec>=1000)             //Keep a track of time
+  {
+    prevSec+=1000;
+
+    updateTime();                      //If 1 minute rolls over then the arrays for windgust and rain are updated
+  }
+
+  if(timeSinceReset>(1440+15)) //24h * 60min/h = 1440min + 15 extra mins just in case the Imp triggers the reset 
+  {
+    resetDay();                          //Reset all the variables that need daily resetting
+  }
 
   smartDelay(100); // must add for GPS data
 
@@ -338,3 +384,6 @@ static void smartDelay(unsigned long ms)
       gps.encode(ss.read());
   } while (millis() - start < ms);
 }
+
+
+
