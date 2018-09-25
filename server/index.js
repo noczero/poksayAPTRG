@@ -174,9 +174,9 @@ function mqtt_messageReceived(topic , message , packet){
 			tekanan = listMessage[2]
 			lux = listMessage[3];
 			windDirection = listMessage[4];
-			rainfall = listMessage[5];
-			lat = listMessage[6];
-			long = listMessage[7];
+			lat = listMessage[5];
+			long = listMessage[6];
+			rainfall = listMessage[7];
 		}
 		// windSpeed = listMessage[0];
 		// windDirection = listMessage[1];
