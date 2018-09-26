@@ -1,14 +1,27 @@
 $(document).ready(function() {
-  var temperature = 0 , humidity = 0 , windSpeed = 0 , windDirection = 0, luxIntensity = 0;
+  var temperature = 0 , humidity = 0 , windSpeed = 0 ,  luxIntensity = 0;
+  var menit = 0; suhu = 0, lembab = 0, tekanan = 0, lux = 0, windDirection = 0, lat = 0, long = 0, rainfall = 0;
+  var rainfallMinute = 0, windSpeedMinute = 0;
+  var lastLat = 0, lastLong = 0;
+  var now = Date();
   // socket bro
   var socket = io.connect();
   socket.on('aws-data', (data)=> {
   	console.log(data);
-  	temperature = parseInt(data.temperature);
-  	humidity = parseInt(data.humidity);
-  	windSpeed = parseInt(data.windSpeeds);
-  	windDirection = parseInt(data.windDirection);
-  	luxIntensity = parseInt(data.luxIntensity);
+    suhu = parseInt(data.suhu);
+    lembab = parseInt(data.lembab);
+    tekanan = parseInt(data.tekanan); 
+    lux = parseInt(data.lux);
+    windDirection = parseInt(data.windDirection);
+    rainfall = parseInt(data.rainfall);
+    lat = parseInt(data.lat);
+    long = parseInt(data.long);
+
+  	// temperature = parseInt(data.temperature);
+  	// humidity = parseInt(data.humidity);
+  	// windSpeed = parseInt(data.windSpeeds);
+  	// windDirection = parseInt(data.windDirection);
+  	// luxIntensity = parseInt(data.luxIntensity);
 
   	gauge.value = windDirection;
 
@@ -29,7 +42,7 @@ $(document).ready(function() {
                         var series = this.series[0];
                         setInterval(function () {
                             var x = (new Date()).getTime(), // current time
-                                y = temperature;
+                                y = suhu;
                             series.addPoint([x, y], true, true);
                         }, 1000);
                 }
@@ -137,7 +150,7 @@ $(document).ready(function() {
                     for (i = -19; i <= 0; i += 1) {
                         data.push({
                             x: time + i * 1000,
-                            y: temperature
+                            y: suhu
                         });
                     }
                     return data;
@@ -163,7 +176,7 @@ $(document).ready(function() {
                         var series = this.series[0];
                         setInterval(function () {
                             var x = (new Date()).getTime(), // current time
-                                y = humidity;
+                                y = lembab;
                             series.addPoint([x, y], true, true);
                         }, 1000);
                 }
@@ -250,7 +263,7 @@ $(document).ready(function() {
                     for (i = -19; i <= 0; i += 1) {
                         data.push({
                             x: time + i * 1000,
-                            y: humidity
+                            y: lembab
                         });
                     }
                     return data;
@@ -276,14 +289,14 @@ $(document).ready(function() {
                         var series = this.series[0];
                         setInterval(function () {
                             var x = (new Date()).getTime(), // current time
-                                y = windSpeed;
+                                y = windDirection;
                             series.addPoint([x, y], true, true);
                         }, 1000);
                 }
             }
         },
         title: {
-            text: 'Wind Speed'
+            text: 'Wind Direction'
         },
         xAxis: {
             type: 'datetime',
@@ -393,7 +406,7 @@ $(document).ready(function() {
             }
         },
         series: [{
-            name: 'Wind Speed',
+            name: 'Wind Direction',
             data: (function () {
                     // generate an array of random data
                     var data = [],
@@ -403,7 +416,7 @@ $(document).ready(function() {
                     for (i = -19; i <= 0; i += 1) {
                         data.push({
                             x: time + i * 1000,
-                            y: windSpeed
+                            y: windDirection
                         });
                     }
                     return data;
@@ -430,7 +443,7 @@ $(document).ready(function() {
                         var series = this.series[0];
                         setInterval(function () {
                             var x = (new Date()).getTime(), // current time
-                                y = luxIntensity;
+                                y = lux;
                             series.addPoint([x, y], true, true);
                         }, 1000);
                 }
@@ -557,7 +570,7 @@ $(document).ready(function() {
                     for (i = -19; i <= 0; i += 1) {
                         data.push({
                             x: time + i * 1000,
-                            y: luxIntensity
+                            y: lux
                         });
                     }
                     return data;
