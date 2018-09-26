@@ -12,7 +12,8 @@ $(document).ready(function() {
 	var startCoordinate = {lat: -6.9034443, lng: 107.5731159};
 	var map = new google.maps.Map(document.getElementById('map'), {
 		zoom: 10,
-		center: startCoordinate
+		center: startCoordinate,
+		mapTypeId: 'terrain'
 	});
 	var temperature = 0 , humidity = 0 , windSpeed = 0 ,  luxIntensity = 0;
 	var menit = 0; suhu = 0, lembab = 0, tekanan = 0, lux = 0, windDirection = 0, lat = 0, long = 0, rainfall = 0;
@@ -24,7 +25,7 @@ $(document).ready(function() {
 	'<div id="content">'+
 	'<div id="siteNotice">'+
 	'</div>'+
-	'<h1 id="firstHeading" class="firstHeading">Poksay - <small> Node 1 </small></h1>'+
+	'<h1 id="firstHeading" class="firstHeading">Poksay - <small> Device 1 </small></h1>'+
 	'<h2 class="secondHeading">PPTK Gambung B3</h2>'+
 	'<div> Status : <span id="deviceStats1" class="label label-success">Active</span> - Plant Health : <span id="deviceStats1" class="label label-success">Fertile, no need pestiside</span> </div>' +
 
@@ -74,9 +75,9 @@ $(document).ready(function() {
 
 	'</div>'+
 	'</div>' 
-	
+
 	,
-	
+
 	'<div id="content">'+
 	'<div id="siteNotice">'+
 	'</div>'+
@@ -189,7 +190,7 @@ $(document).ready(function() {
   	// set data to html id
   	$('#temp1').text(suhu + ' Celcius');
   	$('#humid1').text(lembab + ' %');
-  	
+
   	$('#windDirection1').text(windDirectionConvert(windDirection) );
   	$('#luxIntensity1').text(lux + ' lux');
   	$('#pres1').text(tekanan + ' Pascal');
@@ -215,7 +216,10 @@ $(document).ready(function() {
  		return function() {
  			infowindow.setContent(contentString[0]);
  			infowindow.open(map, marker);
+ 			map.panTo(this.getPosition());
+ 			map.setZoom(13);
  		}
+
  	})(marker));
 
  	deviceCount++;

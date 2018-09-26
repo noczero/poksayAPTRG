@@ -560,7 +560,7 @@ $(document).ready(function() {
             }
         },
         series: [{
-            name: 'Wind Speed',
+            name: 'Lux Intensity',
             data: (function () {
                     // generate an array of random data
                     var data = [],
@@ -594,7 +594,7 @@ var gauge = new RadialGauge({
     width : 250,
     height : 250,
     minValue: 0,
-    maxValue: 360,
+    maxValue: 10,
     majorTicks: [
         "N",
         "NE",
