@@ -5,7 +5,8 @@
     {
       seconds = 0;
       Serial.println("Running in one minutes...");
-      rain_fall_minute = rainFall;
+      rain_fall_minute = countRainFall();
+      wind_speed_rpm = countWindSpeed(wind_count);
       sendingDataLoRa("minute," + String(rain_fall_minute) + "," + String(wind_speed_rpm)); 
       // every hours
       if(++minutes > 59) {
@@ -21,7 +22,9 @@
 
       //WindGust_10min[mins_10] = 0;                   //Zero out wind gust for this minute
       //rainHour[minutes] = 0;   
-      resetRainValue();                      //Zero out rainfall for this minute
+      resetRainValue();    
+      count_magnet = 0 ;                  //Zero out rainfall for this minute
+      wind_count = 0;
       timeSinceReset++;                              //Add one minute to the time since the last midnight reset   
       
     }
@@ -39,3 +42,4 @@
     
     timeSinceReset = 0;                              //Reset the emergency midnight reset
   }
+

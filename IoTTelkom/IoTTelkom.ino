@@ -45,6 +45,9 @@ static const uint32_t GPSBaud = 9600;
 // Hall effect
 #define pinHall 2 // Digital 
 
+// Reed Switch
+#define pinReed 3 
+
 //Wind gust and rainfall arrays are updated every minute
 //Timing variables
 byte seconds;                       //Keeps track of seconds to increment the minute counter
@@ -55,6 +58,7 @@ long prevSec;                       //Millis counter to check for passing second
 unsigned int timeSinceReset;        //Keeps track of time (in mins) since last reset and resets variables after 24hrs
 int wind_speed_rpm;
 int rain_fall_minute;
+unsigned int lastRec;
 
 
 // The TinyGPS++ object
@@ -161,17 +165,33 @@ void setupGPS(){
 void setupHallEffect(){
   Serial.println("Hall Effect setup...");
   //interrupt all gpio beside gpio16
-  pinMode(pinHall, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(pinHall),detectMagnet,CHANGE);
+  pinMode(pinHall, INPUT_PULLUP); //
+  attachInterrupt(digitalPinToInterrupt(pinHall),detectMagnet,FALLING);
 }
 
+void setupReedSwitch(){
+  Serial.println("Reed Switch setup...");
+  pinMode(pinReed, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(pinReed),windSpeed,FALLING);
+}
+
+int count_magnet = 0;
 void detectMagnet(){
   //digitalWrite(LED2, HIGH);
-  count++;
+  count_magnet++;
   Serial.println("Magnet Detected");
 }
 
-// 
+//
+int wind_count = 0; 
+void windSpeed(){
+  if (millis() - lastRec > 20 ) {
+    wind_count++;
+    lastRec = millis();
+    Serial.println("One ROtation Detected");
+  }
+  
+}
 
 // just testing
 String readHallEffect(){
@@ -182,10 +202,21 @@ String readHallEffect(){
 
 // count tipping 
 int countTipping = 0, rainFall = 0;
-String countRainFall(){
-  rainFall = rainFall + (0.2 * count);
+int countRainFall(){
+  rainFall = rainFall + (0.2 * count_magnet);
 
-  return String(rainFall);
+  return rainFall;
+}
+
+// count wind speed 
+float wind_speed = 0.0, radius = 2.3;
+float countWindSpeed(int rpm){
+  wind_speed = wind_speed + (0.2 * count_magnet);
+  //V=r×2π×(rps)……m/s
+  // rpm to rps
+  int rps = rpm/60;
+  wind_speed = radius * 2 * 3.14 * rps;
+  return wind_speed;
 }
 
 void resetRainValue(){
@@ -323,6 +354,9 @@ void setup() {
 
   // hall effect
   setupHallEffect();
+
+  // reed switch
+  setupReedSwitch();
 }
 
 void sendingDataLoRa(String data){
@@ -353,6 +387,10 @@ void loop() {
   // hall effect
    String detect = readHallEffect();
    Serial.println("Hall Effect : " + detect);
+
+   // wind & tip
+   Serial.println("Wind Count " + String(wind_count));
+   Serial.println("Tip Count " + String(count_magnet));
 
   sendingDataLoRa(dataBME + "," + lux + "," + windDirection + "," + location + "," + detect);
   //delay(100);
@@ -386,6 +424,8 @@ static void smartDelay(unsigned long ms)
       gps.encode(ss.read());
   } while (millis() - start < ms);
 }
+
+
 
 
 
