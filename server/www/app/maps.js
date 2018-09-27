@@ -60,6 +60,10 @@ $(document).ready(function() {
 	'<th> Wind Direction </th> ' +
 	'<th id="windDirection1"> ' + windDirectionConvert(windDirection) + ' </th> ' +
 	'</tr>' +
+	'<tr>'+
+	'<th> Rain Fall </th>'+
+	'<th id="rainfall">'+rainfallMinute+' mm </th>'+
+	'</tr>'+
 	'<tr>' +
 	'<th> Lux Intensity </th> ' +
 	'<th id="luxIntensity1"> ' + lux + ' lux </th> ' +

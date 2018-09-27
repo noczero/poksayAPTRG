@@ -22,8 +22,9 @@ console.log("Server starting... 192.168.1.2:" + portListen)
 
 // var idDevice = 'zeroDevice-1', temperature = 0 , humidity = 0 , windSpeed = 0 , windDirection = 0, luxIntensity = 0;
 //data bme : suhu, lembab, tekanan
-let idDevice = 'zeroDevice-1', suhu = 0, lembab = 0, tekanan = 0, lux = 0, windDirection = 0, lat = 0, long = 0, rainfall = 0;
+let idDevice = 'zeroDevice-1', suhu = 0, lembab = 0, tekanan = 0, lux = 0, windDirection = 0, rainfall = 0;
 let rainfallMinute = 0, windSpeedMinute = 0;
+var lat, long;
 //suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall
 /*=====================================
 =            Mysql SQL            =
@@ -32,10 +33,10 @@ let rainfallMinute = 0, windSpeedMinute = 0;
 
 var mysql = require('mysql');
 var conn = mysql.createConnection({
-	host     : '192.168.1.18',
-	port 	 : 	3306,
-	user     : 'poksay',
-	password : 'poksay',
+	host     : 'localhost',
+	// port 	 : 	3306,
+	user     : 'root',
+	password : '',
 	database : 'mydb'
 });
 
@@ -49,13 +50,15 @@ conn.connect(function(err){
 	console.log('Sukses... \n terkoneksi pada id ' + conn.threadId)
 });
 
-function insertDataToDB(data){
-	conn.query('INSERT INTO weather suhu=?', data, function(err, result){
+function insertData(data){
+	conn.query('INSERT INTO weather SET suhu='+(data[0])+', lembab='+(data[1])+', tekanan='+(data[2])+', lux='+(data[3])+', windSpeed='+(data[2])+', windDirection='+(data[4]),+', lat='+(lat)+', lon='+(long)+', rainfall='+(data[7]), function(err, result){
 		if (err) {
 			console.log(err);
+		}else{
+			console.log('Data Masuk.....');
 		}
 	})
-}
+};
 
 // function insertDataToDB(){
 // 	connection.connect();
@@ -63,8 +66,8 @@ function insertDataToDB(data){
 // // const queryString = "INSERT INTO aws (id,suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall) VALUES (" +  
 // // [idDevice,suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall].join(",")  + ")";
 
-// 	connection.query("INSERT INTO weather (suhu, lembab, tekanan, lux, windSpeed, windDirection, rainfall, lat, lon) VALUES ("+
-// 		[suhu, lembab, tekanan, lux, windSpeedMinute, windDirection, rainfall, lat, long].join(",")  + ")", function(err, rows, fields){
+// 	connection.query("SERT INTO weather (suhu, lembab, tekanan, lux, windSpeed, windDirection, rainfall, lat, lon) VALUES ("+
+// 		[suhu, lembab, tekanan, lux, windINSpeedMinute, windDirection, rainfall, lat, long].join(",")  + ")", function(err, rows, fields){
 
 // 			if(err){	
 // 				console.log(err);
@@ -111,9 +114,8 @@ function insertDataToDB(data){
 app.get('/api/v1', (req,res,next) => {
 	 //let result = getIndoor();
 	//const results; 
-	connection.connect((err,client,done) => {
+	conn.connect((err,client) => {
 		if(err){
-			done();
 			console.log(err);
 		} else {
 			/*
@@ -123,9 +125,9 @@ app.get('/api/v1', (req,res,next) => {
 3. WIND DIR : 5
 4. GPS : 6, 7
 */
-			const queryString = "SELECT iid, suhu, lembab, tekanan, lux, windSpeed, windDirection, rainfall, lat, lon (epoch from date) as date FROM weather";
+			const queryString = "SELECT * FROM weather";
 
-			connection.query(queryString, (err,result) => {
+			conn.query(queryString, (err,result) => {
 				done();
 				if(err){
 					console.log(err);
@@ -305,8 +307,21 @@ function parsingRAWData(data,delimiter){
 	return result;
 }
 
-insertDataToDB();
+
 // call it every 5 minutes
 setInterval( ()=> {
-	insertDataToDB(listMessage);
-}, 1000*60*1);
+	// if (listMessage[0] == "minute") {
+	// 	insertRainfall(listMessage[1]);
+	// 	insertWindSpeed(listMessage[2]);
+	// }else{
+		// insertSuhu(listMessage[0]);
+		// insertLembab(listMessage[1]);
+		// insertTekanan(listMessage[2]);
+		// insertLux(listMessage[3]);
+		// insertWindDirection(listMessage[4]);
+		// insertRainfall(listMessage[7]);
+		// insertLat(listMessage[5]);
+		insertData(listMessage);
+	// }
+
+}, 100*60*1);

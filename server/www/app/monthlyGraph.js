@@ -45,11 +45,11 @@ $(document).ready(function() {
 					 return meta.row + meta.settings._iDisplayStart + 1;
 				}
 				},
-         { "data": "temperature" },
-         { "data" : "humidity"},
-         { "data" : "windspeed"},
-         { "data" : "winddirection"},
-         { "data": "waktu" ,  
+         { "data": "suhu" },
+         { "data" : "lembab"},
+         { "data" : "tekanan"},
+         { "data" : "lux"},
+         { "data": "windDirection" ,  
          		"render" :  function(data){
          					return convertTimestamp(data);
    								 }
@@ -69,19 +69,20 @@ $(document).ready(function() {
    	   //Get Temperature in JSON
 	   $.getJSON('/api/v1', function (data) {
 	   			//console.log(data.rows[1]);
-				var temperatureList = [], humidityList = [], windSpeedList = [], windDirectionList = [], luxList = [];
+				var suhuList = [], lembabList = [], tekananList = [], windDirectionList = [], luxList = [];
 
 				 for (var i in data.rows) {
 				 	//var waktu = new Date.(data.data[i].waktu).getTime()/1000;
 				 	//var waktu = moment(data.data[i].waktu).unix();
-				 	temperatureList.push([data.rows[i].date*1000 , data.rows[i].temperature]);
-				 	humidityList.push([data.rows[i].date*1000 , data.rows[i].humidity]);
-				 	windSpeedList.push([data.rows[i].date*1000 , data.rows[i].windspeed]);
-				 	windDirectionList.push([data.rows[i].date*1000 , data.rows[i].lux]);
+				 	suhuList.push([data.rows[i].date*1000 , data.rows[i].suhu]);
+				 	lembabList.push([data.rows[i].date*1000 , data.rows[i].lembab]);
+				 	windDirectionList.push([data.rows[i].date*1000 , data.rows[i].windDirection]);
+				 	luxList.push([data.rows[i].date*1000 , data.rows[i].lux]);
+				 	tekananList.push([data.rows[i].date*1000 , data.rows[i].tekanan]);
 				 }
 
 				//console.log(data.data[0].waktu);
-				//	console.log(temperatureList);
+				//	console.log(suhuList);
 				//console.log(data);
 
 	 	Highcharts.stockChart('tempGraph', {
@@ -95,7 +96,7 @@ $(document).ready(function() {
 
 	        series: [{
 	            name: 'Celcius',
-	            data: temperatureList,
+	            data: suhuList,
 	            tooltip: {
 	                valueDecimals: 2
 	            }
@@ -115,7 +116,7 @@ $(document).ready(function() {
 
 	        series: [{
 	            name: 'Percents',
-	            data: humidityList,
+	            data: lembabList,
 	            tooltip: {
 	                valueDecimals: 2
 	            }
@@ -135,7 +136,7 @@ $(document).ready(function() {
 
 	        series: [{
 	            name: 'Degree',
-	            data: windDirectionList,
+	            data: tekananList,
 	            tooltip: {
 	                valueDecimals: 2
 	            }
@@ -155,7 +156,7 @@ $(document).ready(function() {
 
 	        series: [{
 	            name: 'm/s',
-	            data: windSpeedList,
+	            data: windDirectionList,
 	            tooltip: {
 	                valueDecimals: 2
 	            }
@@ -197,7 +198,7 @@ $(document).ready(function() {
 				 for (var i in data.rows) {
 				 	//var waktu = new Date.(data.data[i].waktu).getTime()/1000;
 				 	//var waktu = moment(data.data[i].waktu).unix();
-				 	result.push([data.rows[i].date*1000 , data.rows[i].humidity]);
+				 	result.push([data.rows[i].date*1000 , data.rows[i].lembab]);
 				 }
 
 				//console.log(data.data[0].waktu);
