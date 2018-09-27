@@ -114,10 +114,7 @@ function insertData(data){
 app.get('/api/v1', (req,res,next) => {
 	 //let result = getIndoor();
 	//const results; 
-	conn.connect((err,client) => {
-		if(err){
-			console.log(err);
-		} else {
+	
 			/*
 0. BME DATA : 0, 1, 2 data bme : suhu, lembab, tekanan
 1. LUX : 3
@@ -128,7 +125,6 @@ app.get('/api/v1', (req,res,next) => {
 			const queryString = "SELECT * FROM weather";
 
 			conn.query(queryString, (err,result) => {
-				done();
 				if(err){
 					console.log(err);
 				} else {
@@ -138,10 +134,14 @@ app.get('/api/v1', (req,res,next) => {
 					 console.log("Get data using API...");
 				}		
 			});
-		}
-	});
+	
 });
 
+app.get('/flyDrone-Device1', (req,res,next) => {
+	clientMqtt.publish("telkomIoT/drone","fly");
+	res.json("Drone Flying");
+	 
+});
 
 // /*============================
 // =            MQTT            =
@@ -215,6 +215,7 @@ function mqtt_messageReceived(topic , message , packet){
 		
 
 		if (listMessage[0] == "minute") {
+			console.log("ay");
 			rainfallMinute = listMessage[1];
 			windSpeedMinute = listMessage[2];
 		}else{
@@ -258,8 +259,7 @@ function mqtt_messageReceived(topic , message , packet){
 									// temperature : listMessage[3],
 									// humidity : listMessage[4]
 								});
-	}else
-	if (topic == topic2){
+	}else if (topic == topic2){
 		io.sockets.emit('led2', {data : message , topic : topic2})
 	}
 

@@ -62,7 +62,7 @@ $(document).ready(function() {
 	'</tr>' +
 	'<tr>'+
 	'<th> Rain Fall </th>'+
-	'<th id="rainfall">'+rainfallMinute+' mm </th>'+
+	'<th id="rainfall1">'+rainfallMinute+' mm </th>'+
 	'</tr>'+
 	'<tr>' +
 	'<th> Lux Intensity </th> ' +
@@ -73,7 +73,7 @@ $(document).ready(function() {
 	'' +
 	'<p> <a class="btn btn-primary" href="graph-Device1.html">'+
 	'	Realtime graph </a> <a class="btn btn-info" href="graphMonthly-Device1.html">'+
-	'	Monthly graph </a> <a class="btn btn-warning" href="flyDrone-Device1.html">'+
+	'	Monthly graph </a> <a class="btn btn-warning" href="flyDrone-Device1">'+
 	'	Fly Drone </a> </p>'+
 	'<small>' + now + '</small>' +
 
@@ -205,6 +205,7 @@ $(document).ready(function() {
   	windSpeedMinute = data.windSpeedMinute;
   	rainfallMinute  = data.rainfallMinute;
   	$('#windSpeed1').text(windSpeedMinute + ' m/s');
+  	$('#rainfall1').text(rainfallMinute + ' mm');
   })	
 
  // body, ...args)
