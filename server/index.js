@@ -50,7 +50,7 @@ conn.connect(function(err){
 });
 
 function insertDataToDB(data){
-	conn.query('INSERT INTO weather', data, function(err, result){
+	conn.query('INSERT INTO weather suhu=?', data, function(err, result){
 		if (err) {
 			console.log(err);
 		}
