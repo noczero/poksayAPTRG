@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 // EXPREES DAN SOCKET IO
 const express = require('express'); // import package express
 const app = express(); 
@@ -26,37 +26,55 @@ let idDevice = 'zeroDevice-1', suhu = 0, lembab = 0, tekanan = 0, lux = 0, windD
 let rainfallMinute = 0, windSpeedMinute = 0;
 //suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall
 /*=====================================
-=            Mysqk SQL            =
+=            Mysql SQL            =
 =====================================*/
 
 
 var mysql = require('mysql');
-var connection = mysql.createConnection({
+var conn = mysql.createConnection({
 	host     : '192.168.1.18',
-	user     : 'root',
+	port 	 : 	3306,
+	user     : 'poksay',
 	password : 'poksay',
-	database : 'poksay'
+	database : 'mydb'
 });
 
 
-function insertDataToDB(){
-	connection.connect();
+//connection to mysql
+conn.connect(function(err){
+	if (err) {
+		console.error('Error' + err.stack);
+		return;
+	}
+	console.log('Sukses... \n terkoneksi pada id ' + conn.threadId)
+});
 
-// const queryString = "INSERT INTO aws (id,suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall) VALUES (" +  
-// [idDevice,suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall].join(",")  + ")";
-
-	connection.query("INSERT INTO weather (id, suhu, lembab, tekanan, lux, windSpeed, windDirection, rainfall, lat, lon) VALUES ("+
-		[idDevice,suhu, lembab, tekanan, lux, windSpeedMinute, windDirection, rainfall, lat, long].join(",")  + ")", function(err, rows, fields){
-
-			if(err){
-				console.log(err);
-			}else{
-				console.log('Data have been inserted...')
-			}
-		});
-
-	connection.destroy();
+function insertDataToDB(data){
+	conn.query('INSERT INTO weather', data, function(err, result){
+		if (err) {
+			console.log(err);
+		}
+	})
 }
+
+// function insertDataToDB(){
+// 	connection.connect();
+
+// // const queryString = "INSERT INTO aws (id,suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall) VALUES (" +  
+// // [idDevice,suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall].join(",")  + ")";
+
+// 	connection.query("INSERT INTO weather (suhu, lembab, tekanan, lux, windSpeed, windDirection, rainfall, lat, lon) VALUES ("+
+// 		[suhu, lembab, tekanan, lux, windSpeedMinute, windDirection, rainfall, lat, long].join(",")  + ")", function(err, rows, fields){
+
+// 			if(err){	
+// 				console.log(err);
+// 			}else{
+// 				console.log('Data have been inserted...')
+// 			}
+// 		});
+
+// 	connection.destroy();
+// }
 
 
 // const pool = new mysql.Pool(config);
@@ -290,5 +308,5 @@ function parsingRAWData(data,delimiter){
 insertDataToDB();
 // call it every 5 minutes
 setInterval( ()=> {
-	insertDataToDB();
-}, 1000*60*5);
+	insertDataToDB(listMessage);
+}, 1000*60*1);
