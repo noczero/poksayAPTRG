@@ -324,4 +324,4 @@ setInterval( ()=> {
 		insertData(listMessage);
 	// }
 
-}, 100*60*1);
+}, 1000*60*5);

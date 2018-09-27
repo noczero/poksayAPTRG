@@ -289,14 +289,14 @@ $(document).ready(function() {
                         var series = this.series[0];
                         setInterval(function () {
                             var x = (new Date()).getTime(), // current time
-                                y = windDirection;
+                                y = windSpeedMinute;
                             series.addPoint([x, y], true, true);
                         }, 1000);
                 }
             }
         },
         title: {
-            text: 'Wind Direction'
+            text: 'Wind Speed'
         },
         xAxis: {
             type: 'datetime',
@@ -406,7 +406,7 @@ $(document).ready(function() {
             }
         },
         series: [{
-            name: 'Wind Direction',
+            name: 'Wind Speed',
             data: (function () {
                     // generate an array of random data
                     var data = [],
