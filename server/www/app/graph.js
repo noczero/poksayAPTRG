@@ -26,6 +26,10 @@ $(document).ready(function() {
   	gauge.value = windDirection;
 
   });
+  socket.on('minuteData', (data)=>{
+    console.log(data);
+    windSpeedMinute = parseInt(data.windSpeedMinute);
+  })
 
 	Highcharts.setOptions({
             global: {
@@ -289,14 +293,14 @@ $(document).ready(function() {
                         var series = this.series[0];
                         setInterval(function () {
                             var x = (new Date()).getTime(), // current time
-                                y = windDirection;
+                                y = windSpeedMinute;
                             series.addPoint([x, y], true, true);
                         }, 1000);
                 }
             }
         },
         title: {
-            text: 'Wind Direction'
+            text: 'Wind Speed'
         },
         xAxis: {
             type: 'datetime',
@@ -406,7 +410,7 @@ $(document).ready(function() {
             }
         },
         series: [{
-            name: 'Wind Direction',
+            name: 'Wind Speed',
             data: (function () {
                     // generate an array of random data
                     var data = [],
@@ -416,7 +420,7 @@ $(document).ready(function() {
                     for (i = -19; i <= 0; i += 1) {
                         data.push({
                             x: time + i * 1000,
-                            y: windDirection
+                            y: windSpeedMinute
                         });
                     }
                     return data;
@@ -594,7 +598,7 @@ var gauge = new RadialGauge({
     width : 250,
     height : 250,
     minValue: 0,
-    maxValue: 10,
+    maxValue: 7,
     majorTicks: [
         "N",
         "NE",

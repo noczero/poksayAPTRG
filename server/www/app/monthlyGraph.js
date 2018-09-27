@@ -70,7 +70,7 @@ $(document).ready(function() {
 	   $.getJSON('/api/v1', function (data) {
 	   			//console.log(data.rows[1]);
 				var suhuList = [], lembabList = [], tekananList = [], windDirectionList = [], luxList = [];
-
+				console.log(data);
 				 for (var i in data.rows) {
 				 	//var waktu = new Date.(data.data[i].waktu).getTime()/1000;
 				 	//var waktu = moment(data.data[i].waktu).unix();
