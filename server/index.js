@@ -51,7 +51,20 @@ conn.connect(function(err){
 });
 
 function insertData(data){
-	conn.query('INSERT INTO weather SET suhu='+(data[0])+', lembab='+(data[1])+', tekanan='+(data[2])+', lux='+(data[3])+', windSpeed='+(data[2])+', windDirection='+(data[4]),+', lat='+(lat)+', lon='+(long)+', rainfall='+(data[7]), function(err, result){
+	console.log(lat, long);
+	var dataInsert = {
+		suhu: suhu,
+		lembab: lembab,
+		tekanan: tekanan,
+		lux: lux, 
+		windSpeed: windSpeedMinute, 
+		windDirection: windDirection,
+		lat: lat,
+		lon: long,
+		rainfall: rainfallMinute
+	};
+	// conn.query('INSERT INTO weather SET suhu='+(suhu)+', lembab='+(lembab)+', tekanan='+(tekanan)+', lux='+(lux)+', windSpeed='+(windSpeedMinute)+', windDirection='+(windDirection),+', lat='+(lat)+', lon='+(long)+', rainfall='+(rainfallMinute), function(err, result){
+	conn.query('INSERT INTO weather SET?', dataInsert, function(err, result){	
 		if (err) {
 			console.log(err);
 		}else{
@@ -324,4 +337,4 @@ setInterval( ()=> {
 		insertData(listMessage);
 	// }
 
-}, 1000*60*5);
+}, 100*60*1);
