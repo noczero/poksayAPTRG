@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 // EXPREES DAN SOCKET IO
 const express = require('express'); // import package express
 const app = express(); 
@@ -23,20 +23,63 @@ console.log("Server starting... 192.168.1.2:" + portListen)
 // var idDevice = 'zeroDevice-1', temperature = 0 , humidity = 0 , windSpeed = 0 , windDirection = 0, luxIntensity = 0;
 //data bme : suhu, lembab, tekanan
 let idDevice = 'zeroDevice-1', suhu = 0, lembab = 0, tekanan = 0, lux = 0, windDirection = 0, lat = 0, long = 0, rainfall = 0;
+let rainfallMinute = 0, windSpeedMinute = 0;
+//suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall
 /*=====================================
-=            Postgress SQL            =
+=            Mysql SQL            =
 =====================================*/
-const postgress = require('pg');
-const config = {
-    user: 'pi',
-    database: 'zeroWeather',
-    password: 'noczero',
-    port: 5432
-};
 
-const pool = new postgress.Pool(config);
+
+var mysql = require('mysql');
+var conn = mysql.createConnection({
+	host     : '192.168.1.18',
+	port 	 : 	3306,
+	user     : 'poksay',
+	password : 'poksay',
+	database : 'mydb'
+});
+
+
+//connection to mysql
+conn.connect(function(err){
+	if (err) {
+		console.error('Error' + err.stack);
+		return;
+	}
+	console.log('Sukses... \n terkoneksi pada id ' + conn.threadId)
+});
+
+function insertDataToDB(data){
+	conn.query('INSERT INTO weather', data, function(err, result){
+		if (err) {
+			console.log(err);
+		}
+	})
+}
+
+// function insertDataToDB(){
+// 	connection.connect();
+
+// // const queryString = "INSERT INTO aws (id,suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall) VALUES (" +  
+// // [idDevice,suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall].join(",")  + ")";
+
+// 	connection.query("INSERT INTO weather (suhu, lembab, tekanan, lux, windSpeed, windDirection, rainfall, lat, lon) VALUES ("+
+// 		[suhu, lembab, tekanan, lux, windSpeedMinute, windDirection, rainfall, lat, long].join(",")  + ")", function(err, rows, fields){
+
+// 			if(err){	
+// 				console.log(err);
+// 			}else{
+// 				console.log('Data have been inserted...')
+// 			}
+// 		});
+
+// 	connection.destroy();
+// }
+
+
+// const pool = new mysql.Pool(config);
 //postgres://dbusername:passwrod@server:port/database
-const connectionString = process.env.DATABASE_URL || 'postgres://pi:noczero@192.168.1.2:5432/zeroWeather';
+// const connectionString = process.env.DATABASE_URL || 'mysql://root:poksay@192.168.1.18:5432/zeroWeather';
 
 // function insertDataToDB(){ 
 // 	pool.connect((err,client,done) => {
@@ -45,7 +88,7 @@ const connectionString = process.env.DATABASE_URL || 'postgres://pi:noczero@192.
 // 			console.log(err);
 // 		}
 // 		//if (dataDHT22 != undefined) {
-// 			const queryString = "INSERT INTO aws (id,dataBME,lux,windDirection,location) VALUES (" +  [idDevice,dataBME, lux, windDirection, location].join(",")  + ")";
+// 			const queryString = "INSERT INTO aws (id,suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall) VALUES (" +  [idDevice,suhu, lembab, tekanan, lux, windDirection, lat, long, rainfall].join(",")  + ")";
 			
 // 			client.query(queryString , (err,result) => {
 // 				if(err)
@@ -58,6 +101,8 @@ const connectionString = process.env.DATABASE_URL || 'postgres://pi:noczero@192.
 // 			});
 // 		//}
 // 	});
+
+
 // }
 
 /*===================================
@@ -66,7 +111,7 @@ const connectionString = process.env.DATABASE_URL || 'postgres://pi:noczero@192.
 app.get('/api/v1', (req,res,next) => {
 	 //let result = getIndoor();
 	//const results; 
-	pool.connect((err,client,done) => {
+	connection.connect((err,client,done) => {
 		if(err){
 			done();
 			console.log(err);
@@ -78,9 +123,9 @@ app.get('/api/v1', (req,res,next) => {
 3. WIND DIR : 5
 4. GPS : 6, 7
 */
-			const queryString = "SELECT id,temperature,humidity,windspeed,winddirection,lux,extract(epoch from waktu) as date FROM aws";
+			const queryString = "SELECT iid, suhu, lembab, tekanan, lux, windSpeed, windDirection, rainfall, lat, lon (epoch from date) as date FROM weather";
 
-			client.query(queryString, (err,result) => {
+			connection.query(queryString, (err,result) => {
 				done();
 				if(err){
 					console.log(err);
@@ -162,8 +207,10 @@ function mqtt_messageReceived(topic , message , packet){
 		2. rainfall : 4
 		3. WIND DIR : 5
 		4. GPS : 6, 7
+
+		suhu, lembab, tekanan, lux, rainfall, windspeed, winddir, lat, lng, waktu 
 */
-		let rainfallMinute = 0, windSpeedMinute = 0;
+		
 
 		if (listMessage[0] == "minute") {
 			rainfallMinute = listMessage[1];
@@ -258,8 +305,8 @@ function parsingRAWData(data,delimiter){
 	return result;
 }
 
-//insertDataToDB();
+insertDataToDB();
 // call it every 5 minutes
-// setInterval( ()=> {
-// 	insertDataToDB();
-// }, 1000*60*5);
+setInterval( ()=> {
+	insertDataToDB(listMessage);
+}, 1000*60*1);
