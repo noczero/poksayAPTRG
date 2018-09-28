@@ -85,7 +85,7 @@ $(document).ready(function() {
 				//	console.log(suhuList);
 				//console.log(data);
 
-	 	Highcharts.stockChart('tempGraph', {
+	 	Highcharts.stockChart('tempGraph', {	
 	        rangeSelector: {
 	            selected: 1
 	        },

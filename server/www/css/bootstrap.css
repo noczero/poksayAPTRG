@@ -27,6 +27,7 @@ section,
 summary {
   display: block;
 }
+
 audio,
 canvas,
 progress,
@@ -1370,6 +1371,18 @@ a.text-warning:focus {
 a.text-danger:hover,
 a.text-danger:focus {
   color: #843534;
+}
+.bg {
+  /* The image used */
+  background-image: url("../img/bg.jpg");
+
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .bg-primary {
   color: #fff;
