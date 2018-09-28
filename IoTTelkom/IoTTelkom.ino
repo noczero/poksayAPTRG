@@ -165,7 +165,7 @@ void setupGPS(){
 void setupHallEffect(){
   Serial.println("Hall Effect setup...");
   //interrupt all gpio beside gpio16
-  pinMode(pinHall, INPUT_PULLUP); //
+  pinMode(pinHall, INPUT); //
   attachInterrupt(digitalPinToInterrupt(pinHall),detectMagnet,FALLING);
 }
 
@@ -392,7 +392,7 @@ void loop() {
    Serial.println("Wind Count " + String(wind_count));
    Serial.println("Tip Count " + String(count_magnet));
 
-  sendingDataLoRa(dataBME + "," + lux + "," + windDirection + "," + location + "," + detect);
+  sendingDataLoRa(dataBME + "," + lux + "," + windDirection + "," + location + "," + String(count_magnet) + "," + String(wind_count));
   //delay(100);
 
   if(millis()-prevSec>=1000)             //Keep a track of time

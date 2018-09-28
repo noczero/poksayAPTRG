@@ -7,7 +7,7 @@
       Serial.println("Running in one minutes...");
       rain_fall_minute = countRainFall();
       wind_speed_rpm = countWindSpeed(wind_count);
-      sendingDataLoRa("minute," + String(rain_fall_minute) + "," + String(wind_speed_rpm)); 
+      sendingDataLoRa("minute," + String(rain_fall_minute) + "," + String(wind_speed_rpm) + ",:" ); 
       // every hours
       if(++minutes > 59) {
         minutes = 0;
