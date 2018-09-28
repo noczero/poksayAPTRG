@@ -13,7 +13,7 @@ $(document).ready(function() {
     tekanan = parseInt(data.tekanan); 
     lux = parseInt(data.lux);
     windDirection = parseInt(data.windDirection);
-    rainfall = parseInt(data.rainfall);
+    rainfall = parseFloat(data.rainfall);
     lat = parseInt(data.lat);
     long = parseInt(data.long);
 
@@ -28,7 +28,7 @@ $(document).ready(function() {
   });
   socket.on('minuteData', (data)=>{
     console.log(data);
-    windSpeedMinute = parseInt(data.windSpeedMinute);
+    windSpeedMinute = parseFloat(data.windSpeedMinute);
   })
 
 	Highcharts.setOptions({

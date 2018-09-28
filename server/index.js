@@ -51,6 +51,7 @@ conn.connect(function(err){
 });
 
 function insertData(data){
+	//creating object for inserting data
 	console.log(lat, long);
 	var dataInsert = {
 		suhu: suhu,
@@ -165,7 +166,7 @@ const topic2 = 'EEEDays/zeroDevice-1/cmd'; //subscribe to all topics
 
 //const broker_server = 'mqtt://192.168.43.114';
 //const broker_server = 'mqtt://192.168.1.2';
-const broker_server = 'mqtt://192.168.1.2';
+const broker_server = 'mqtt://192.168.43.2';
 
 const options = {
 	clientId : 'zero_device' + Math.random().toString(16).substr(2, 8),
@@ -214,7 +215,7 @@ function mqtt_messageReceived(topic , message , packet){
 	if (topic == topic1){
 		// message 
 		listMessage = parsingRAWData(message,","); //parse the message by comma
-		console.log("MSG : " +listMessage);
+		console.log("Payload : " +listMessage);
 		// set message to var
 /*
 		0. BME DATA : 0, 1, 2 //data bme : suhu, lembab, tekanan
@@ -337,4 +338,4 @@ setInterval( ()=> {
 		insertData(listMessage);
 	// }
 
-}, 100*60*1);
+}, 1000*60*1);

@@ -6,18 +6,21 @@ $(document).ready(function() {
 	// -6.891625, 107.610089
 
 	var locations = [ 
+	//
 	['Node 1', -6.891625, 107.610089],
 	['Telkom', -6.974001,107.6281593]
 	];
-	var startCoordinate = {lat: -6.9034443, lng: 107.5731159};
+	var startCoordinate = {lat: -6.973383, lng: 107.632578};
 	var map = new google.maps.Map(document.getElementById('map'), {
 		zoom: 10,
 		center: startCoordinate,
 		mapTypeId: 'terrain'
 	});
 	var temperature = 0 , humidity = 0 , windSpeed = 0 ,  luxIntensity = 0;
-	var menit = 0; suhu = 0, lembab = 0, tekanan = 0, lux = 0, windDirection = 0, lat = 0, long = 0, rainfall = 0;
+	var menit = 0; suhu = 0, lembab = 0, tekanan = 0, lux = 0, windDirection = 0, rainfall = 0;
 	var rainfallMinute = 0, windSpeedMinute = 0;
+	// var  lat = 0, long = 0;
+	var lat = -6.973383, long = 107.632578;
 	var lastLat = 0, lastLong = 0;
 	var now = Date();
 
@@ -26,7 +29,7 @@ $(document).ready(function() {
 	'<div id="siteNotice">'+
 	'</div>'+
 	'<h1 id="firstHeading" class="firstHeading">Poksay - <small> Device 1 </small></h1>'+
-	'<h2 class="secondHeading">PPTK Gambung B3</h2>'+
+	'<h2 class="secondHeading">Aula Fakultas Ilmu Terapan</h2>'+
 	'<div> Status : <span id="deviceStats1" class="label label-success">Active</span> - Plant Health : <span id="deviceStats1" class="label label-success">Fertile, no need pestiside</span> </div>' +
 
 	'<div id="bodyContent">'+
@@ -178,8 +181,8 @@ $(document).ready(function() {
   		//console.log(distance);
   		if (lastLat != lat && lastLong != long && distance >10000){
   			//drawMaps(parseFloat(lat),parseFloat(long));
-  			//drawMaps(parseFloat(lat),parseFloat(long));
-  			drawMaps(-7.1483992,107.5072534);
+  			// drawMaps(parseFloat(lat),parseFloat(long));
+  			drawMaps(-6.973383, 107.632578);
   			lastLat = lat;
   			lastLong = long;
   		}
@@ -202,8 +205,8 @@ $(document).ready(function() {
 
   socket.on('minuteData', (data)=>{
   	console.log(data);
-  	windSpeedMinute = data.windSpeedMinute;
-  	rainfallMinute  = data.rainfallMinute;
+  	windSpeedMinute = parseFloat(data.windSpeedMinute);
+  	rainfallMinute  = parseFloat(data.rainfallMinute);
   	$('#windSpeed1').text(windSpeedMinute + ' m/s');
   	$('#rainfall1').text(rainfallMinute + ' mm');
   })	
@@ -222,13 +225,14 @@ $(document).ready(function() {
  			infowindow.setContent(contentString[0]);
  			infowindow.open(map, marker);
  			map.panTo(this.getPosition());
- 			map.setZoom(13);
+ 			map.setZoom(14);
  		}
 
  	})(marker));
 
  	deviceCount++;
  	$('#numberDevice').text(deviceCount.toString());
+
  }
 
 
@@ -251,6 +255,28 @@ $(document).ready(function() {
  		return "North West";
  	}
  }
+
+
+setInterval( ()=> {
+	// if (listMessage[0] == "minute") {
+	// 	insertRainfall(listMessage[1]);
+	// 	insertWindSpeed(listMessage[2]);
+	// }else{
+		// insertSuhu(listMessage[0]);
+		// insertLembab(listMessage[1]);
+		// insertTekanan(listMessage[2]);
+		// insertLux(listMessage[3]);
+		// insertWindDirection(listMessage[4]);
+		// insertRainfall(listMessage[7]);
+		// insertLat(listMessage[5]);
+		
+	// }
+	windSpeedMinute = 0;
+	rainfallMinute = 0;
+	$('#windSpeed1').text(windSpeedMinute + ' m/s');
+  	$('#rainfall1').text(rainfallMinute + ' mm');
+
+}, 5000*60*1);
 
 });
 
@@ -277,3 +303,4 @@ $(document).ready(function() {
 
   return distance;
 }
+
